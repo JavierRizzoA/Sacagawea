@@ -36,7 +36,7 @@ entity RegistrosArriba is
 		clk : in std_logic;
 		mbr_ld, ir_ld, ip_ld, temp_ld, ban_ld, ar_ld: in std_logic;
 		mbr_clr, ir_clr, ip_clr, temp_clr, ban_clr , ar_clr: in std_logic;
-		mbr_sel, ar_sel, sum_sel: in std_logic;
+		mbr_sel, ar_sel, sum_sel, ir_sel: in std_logic;
 		ip_sel2: in std_logic_vector(1 downto 0);
 		ME, Z, MA: in std_logic;
 		bus_datos : inout std_logic_vector(7 downto 0);
@@ -87,7 +87,6 @@ architecture Behavioral of RegistrosArriba is
 		  sel : in std_logic_vector(1 downto 0);
 		  S : out std_logic);
 	end component;
-	signal bus_datos : std_logic_vector(7 downto 0);
 	signal mbr_e : std_logic_Vector(7 downto 0);
 	signal ir_s : std_logic_vector(7 downto 0);
 	signal ip_e : std_logic_vector(11 downto 0);
@@ -101,14 +100,16 @@ architecture Behavioral of RegistrosArriba is
 	signal sum_e : std_logic_vector(11 downto 0);
 	signal sum_tail : std_logic_vector(7 downto 0);
 	signal sum_head : std_logic_vector(3 downto 0);
+	signal ir_e : std_logic_vector(7 downto 0);
 begin
 	u1 : Register8 port map (mbr_e, mbr_ld, mbr_clr, clk, bus_datos); -- MBR
 	u2 : Mux2to1_8bit port map(s_alu,bus_datos ,mbr_sel, mbr_e); --MUX MBR
 	
-	ir : Register8 port map (bus_datos, ir_ld, ir_clr, clk, ir_s); -- IR
+	ir : Register8 port map (ir_e, ir_ld, ir_clr, clk, ir_s); -- IR
+	ir1: Mux2to1_8bit port map (bus_datos, "10011100", ir_sel, ir_e);
 	
 	ip : Register12 port map (ip_e, ip_ld, ip_clr, clk, ip_s); -- IP
-	ip2: Mux4to1_12bit port map (sumador_s, ir_s(3 downto 0) & bus_datos, temp_s, "XXXXXXXXXXXX", ip_sel2, ip_e);
+	ip2: Mux4to1_12bit port map (sumador_s, ir_s(3 downto 0) & bus_datos, temp_s, "000000000000", ip_sel2, ip_e);
 
 	tp : Register12 port map (ip_s, temp_ld, temp_clr, clk, temp_s); -- TEMP
 	
