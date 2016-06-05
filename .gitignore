@@ -1,4 +1,6 @@
 # intermediate build files
+*.log
+*.exe
 *.wdb
 *.bgn
 *.bit
@@ -66,3 +68,4 @@ xlnx_auto_0_xdb/
 xst/
 _ngo/
 _xmsgs/
+isim/
