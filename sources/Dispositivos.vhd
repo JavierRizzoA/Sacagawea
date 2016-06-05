@@ -30,55 +30,75 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity Dispositivos is
-	port(ar : in std_logic_vector(11 downto 0);
+	port(	
+			ar : in std_logic_vector(11 downto 0);
 			clk : in std_logic;
-			ram_we: in std_logic;
-			
+			ram_w_r: in std_logic;
 			bus_datos : inout std_logic_vector(7 downto 0);
-			led_out: out std_logic_vector(7 downto 0);
-			switch_in : in std_logic_vector(7 downto 0));
+			sal_leds_spartan : out std_logic_vector(7 downto 0);
+			in_switches_spartan : in std_logic_vector(7 downto 0)
+		);
 		  
 end Dispositivos;
 
 architecture Behavioral of Dispositivos is
 	
 	component RAM 
-	port(
-			CLK  : in std_logic;
-          WE   : in std_logic;
-          EN   : in std_logic;
-          ADDR : in std_logic_vector(9 downto 0);
-          DI   : in std_logic_vector(7 downto 0);
-          DO   : out std_logic_vector(7 downto 0));
+		port(
+				 clk : in std_logic;
+				 write_read : in std_logic;
+				 ram_enable : in std_logic;
+				 direccion : in std_logic_vector(9 downto 0);
+				 ram_datos : inout std_logic_vector(7 downto 0)
+			 );
 	end component;
+	
 	component ROM
-	port(CLK : in std_logic;
-      EN : in std_logic;
-      ADDR : in std_logic_vector(9 downto 0);
-      DATA : out std_logic_vector(7 downto 0));
+		port(
+			clk : in std_logic;
+			rom_enable : in std_logic;
+			direccion : in std_logic_vector(9 downto 0);
+			rom_datos : out std_logic_vector(7 downto 0)
+			);
 	end component;
-	signal ram_en : std_logic;
-	signal rom_en : std_logic;
-	signal ram_out: std_logic_vector(7 downto 0);
-	signal rom_out : std_logic_vector(7 downto 0);
 	
-	signal switch_out: std_logic_vector(7 downto 0);
+	component LEDS
+		port(
+				clk : in std_logic;
+				leds_enable : in std_logic;
+				leds_input : in std_logic_vector(7 downto 0);
+				leds_output : out std_logic_vector(7 downto 0)
+			  );
+	end component;
+	
+	component DECODIFICADOR
+		port(
+				dir_ar : in std_logic_vector(1 downto 0);
+				enable_ROM : out std_logic;
+				enable_RAM : out std_logic;
+				enable_LEDS : out std_logic;
+				enable_SWITCHES : out std_logic
+			  );
+	end component;
+	
+	component SWITCHES 
+		port(
+				clk : in std_logic;
+				switch_enable : in STD_LOGIC;
+				switch_datos : out std_logic_vector(7 downto 0);
+				switch_in : in  STD_LOGIC_VECTOR (7 downto 0)
+			  );
+	end component;
+	
+	signal temp0, temp1, temp2, temp3 : std_logic;
+	
 begin
-	led_out <= bus_datos when ar(11 downto 10) = "11" else
-				"ZZZZZZZZ";
-	switch_out <= switch_in when ar(11 downto 10) = "10" else
-				"ZZZZZZZZ";
-	ram_en <= '1' when ar(11 downto 10) = "00" else 
-				'0';
-	rom_en <= '1' when ar(11 downto 10) = "01" else 
-				'0';
-	r0: RAM port map(clk, ram_we, ram_en, ar(9 downto 0), bus_datos, ram_out);
-	r1: ROM port map(clk, rom_en, ar(9 downto 0), rom_out);
 	
-	bus_datos <= ram_out when ram_out /= "ZZZZZZZZ" else
-					 rom_out when rom_out /= "ZZZZZZZZ" else
-					 switch_out when switch_out /= "ZZZZZZZZ" else
-					 "ZZZZZZZZ";
+	decodificador0: DECODIFICADOR port map(ar(11 downto 10), temp0, temp1, temp2, temp3);
+	disp0: ROM port map(clk, temp0, ar(9 downto 0), bus_datos);
+	disp1: RAM port map(clk, ram_w_r, temp1, ar(9 downto 0), bus_datos);
+	disp2: LEDS port map(clk, temp2, bus_datos, sal_leds_spartan);
+	disp3: SWITCHES port map(clk, temp3, bus_datos, in_switches_spartan);
 						
 end Behavioral;
 

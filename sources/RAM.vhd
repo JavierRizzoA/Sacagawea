@@ -4,12 +4,13 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity RAM is
-    port (CLK  : in std_logic;
-          WE   : in std_logic;
-          EN   : in std_logic;
-          ADDR : in std_logic_vector(9 downto 0);
-          DI   : in std_logic_vector(7 downto 0);
-          DO   : out std_logic_vector(7 downto 0));
+    port (
+				clk  : in std_logic;
+				write_read   : in std_logic;	--  write = 1  read = 0
+				ram_enable   : in std_logic;	
+				direccion : in std_logic_vector(9 downto 0);
+				ram_datos : inout std_logic_vector(7 downto 0)
+			);
 end RAM;
 
 architecture syn of RAM is
@@ -17,17 +18,17 @@ architecture syn of RAM is
     signal RAM: ram_type;
 begin
 
-    process (CLK)
+    process (clk)
     begin
-        if CLK'event and CLK = '1' then
-            if EN = '1' then
-                if WE = '1' then
-                    RAM(conv_integer(ADDR)) <= DI;
-						  DO <= "ZZZZZZZZ";
-                end if;
-                DO <= RAM(conv_integer(ADDR)) ;
+        if clk'event and clk = '1' then
+            if ram_enable = '1' then
+                if write_read = '1' then
+                    RAM(conv_integer(direccion)) <= ram_datos;
+                else
+						ram_datos <= RAM(conv_integer(direccion)) ;
+					 end if;
 				else 
-					DO <= "ZZZZZZZZ";
+					ram_datos <= "ZZZZZZZZ";
             end if;
         end if;
     end process;

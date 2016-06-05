@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity ROM is
-port (CLK : in std_logic;
-      EN : in std_logic;
-      ADDR : in std_logic_vector(9 downto 0);
-      DATA : out std_logic_vector(7 downto 0));
+port (clk : in std_logic;
+      rom_enable: in std_logic;
+      direccion : in std_logic_vector(9 downto 0);
+      rom_datos : out std_logic_vector(7 downto 0));
 end ROM;
 
 architecture syn of ROM is
@@ -143,15 +143,15 @@ architecture syn of ROM is
 	 signal rdata : std_logic_vector(7 downto 0);
 begin
 
-    rdata <= ROM(conv_integer(ADDR));
+    rdata <= ROM(conv_integer(direccion));
 
-    process (CLK)
+    process (clk)
     begin
-        if (CLK'event and CLK = '1') then
-            if (EN = '1') then
-                DATA <= rdata;
+        if (clk'event and clk = '1') then
+            if (rom_enable = '1') then
+                rom_datos <= rdata;
 				else
-					DATA <= "ZZZZZZZZ";
+					rom_datos <= "ZZZZZZZZ";
             end if;
         end if;
     end process;
