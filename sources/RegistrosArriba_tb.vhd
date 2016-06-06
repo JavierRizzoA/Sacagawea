@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   17:06:00 06/05/2016
+-- Create Date:   17:55:21 06/05/2016
 -- Design Name:   
--- Module Name:   /home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/TBRegistrosArriba.vhd
+-- Module Name:   /home/tony/Sacagawea/sources/RegistrosArriba_tb.vhd
 -- Project Name:  Sacagawea
 -- Target Device:  
 -- Tool versions:  
@@ -32,10 +32,10 @@ USE ieee.std_logic_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY TBRegistrosArriba IS
-END TBRegistrosArriba;
+ENTITY RegistrosArriba_tb IS
+END RegistrosArriba_tb;
  
-ARCHITECTURE behavior OF TBRegistrosArriba IS 
+ARCHITECTURE behavior OF RegistrosArriba_tb IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
@@ -49,12 +49,6 @@ ARCHITECTURE behavior OF TBRegistrosArriba IS
          temp_ld : IN  std_logic;
          ban_ld : IN  std_logic;
          ar_ld : IN  std_logic;
-         mbr_clr : IN  std_logic;
-         ir_clr : IN  std_logic;
-         ip_clr : IN  std_logic;
-         temp_clr : IN  std_logic;
-         ban_clr : IN  std_logic;
-         ar_clr : IN  std_logic;
          mbr_sel : IN  std_logic;
          ar_sel : IN  std_logic;
          sum_sel : IN  std_logic;
@@ -78,12 +72,6 @@ ARCHITECTURE behavior OF TBRegistrosArriba IS
    signal temp_ld : std_logic := '0';
    signal ban_ld : std_logic := '0';
    signal ar_ld : std_logic := '0';
-   signal mbr_clr : std_logic := '0';
-   signal ir_clr : std_logic := '0';
-   signal ip_clr : std_logic := '0';
-   signal temp_clr : std_logic := '0';
-   signal ban_clr : std_logic := '0';
-   signal ar_clr : std_logic := '0';
    signal mbr_sel : std_logic := '0';
    signal ar_sel : std_logic := '0';
    signal sum_sel : std_logic := '0';
@@ -114,12 +102,6 @@ BEGIN
           temp_ld => temp_ld,
           ban_ld => ban_ld,
           ar_ld => ar_ld,
-          mbr_clr => mbr_clr,
-          ir_clr => ir_clr,
-          ip_clr => ip_clr,
-          temp_clr => temp_clr,
-          ban_clr => ban_clr,
-          ar_clr => ar_clr,
           mbr_sel => mbr_sel,
           ar_sel => ar_sel,
           sum_sel => sum_sel,
@@ -145,15 +127,18 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
+			bus_datos <= "10010011";
+
       -- hold reset state for 100 ns.
       wait for 100 ns;	
-		bus_datos <= "11110000";
+
+      wait for clk_period*10;
+
+      -- insert stimulus here 
+		bus_datos <= "10010011";
 		ip_ld <= '1';
-      wait for 100 ns;
-
-		
-
-      wait;
+      wait for 50ns;
+		ir_ld <= '1';
    end process;
 
 END;
