@@ -67,4 +67,3 @@ architecture Behavioral of Multiplicador is
 
 
 end Behavioral;
-
