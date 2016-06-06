@@ -37,8 +37,7 @@ entity RegistrosArriba is
 		control: in std_logic_vector(24 downto 0);
 		mbr_s_datos: in std_logic_vector(7 downto 0);
 		ir_s: in std_logic_vector(7 downto 0);
-		ar_s : out std_logic_vector(11 downto 0);
-		sum_s: out std_logic_vector(11 downto 0));
+		ar_s : out std_logic_vector(11 downto 0));
 end RegistrosArriba;
 
 architecture Behavioral of RegistrosArriba is
