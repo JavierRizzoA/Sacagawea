@@ -16,6 +16,8 @@ end RAM;
 architecture syn of RAM is
     type ram_type is array (1023 downto 0) of std_logic_vector (7 downto 0);
     signal RAM: ram_type;
+    attribute ram_style : string;
+    attribute ram_style of RAM : signal is "block";
 begin
 
     process (clk)
