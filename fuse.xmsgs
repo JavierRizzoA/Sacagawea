@@ -5,7 +5,19 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="Simulator" num="752" delta="unknown" >Running 32 bit ISIM on 64 bit Linux
+<msg type="warning" file="HDLCompiler" num="946" delta="unknown" >"/home/tony/Sacagawea/sources/RegistrosArriba.vhd" Line 96: Actual for formal port <arg fmt="%s" index="1">b</arg> is neither a static name nor a globally static expression
+</msg>
+
+<msg type="warning" file="HDLCompiler" num="946" delta="unknown" >"/home/tony/Sacagawea/sources/RegistrosArriba.vhd" Line 103: Actual for formal port <arg fmt="%s" index="1">b</arg> is neither a static name nor a globally static expression
+</msg>
+
+<msg type="warning" file="HDLCompiler" num="946" delta="unknown" >"/home/tony/Sacagawea/sources/RegistrosArriba.vhd" Line 112: Actual for formal port <arg fmt="%s" index="1">a</arg> is neither a static name nor a globally static expression
+</msg>
+
+<msg type="warning" file="HDLCompiler" num="1242" delta="unknown" >"/build/xfndry10/P.20131013/rtf/vhdl/src/ieee/std_logic_arith.vhd" Line 349: <arg fmt="%s" index="1">Warning</arg>: <arg fmt="%s" index="2">&quot;There is an &apos;U&apos;|&apos;X&apos;|&apos;W&apos;|&apos;Z&apos;|&apos;-&apos; in an arithmetic operand, the result will be &apos;X&apos;(es).&quot;</arg>
+</msg>
+
+<msg type="warning" file="HDLCompiler" num="1242" delta="unknown" >"/build/xfndry10/P.20131013/rtf/vhdl/src/ieee/std_logic_arith.vhd" Line 371: <arg fmt="%s" index="1">Warning</arg>: <arg fmt="%s" index="2">&quot;There is an &apos;U&apos;|&apos;X&apos;|&apos;W&apos;|&apos;Z&apos;|&apos;-&apos; in an arithmetic operand, the result will be &apos;X&apos;(es).&quot;</arg>
 </msg>
 
 </messages>
