@@ -30,18 +30,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity Alu_regs is
-	port(r0_ld, r1_ld, r2_ld : in std_logic;
-		  sel_a, sel_b : in std_logic_vector ( 1 downto 0);
-		  s_mbr: in std_logic_vector(7 downto 0);
-		  clk : in std_logic;
-		  r0_clr, r1_clr, r2_clr : in std_logic;
-		  ctrl_alu : in std_logic_vector(3 downto 0);
-		  s_alu_regs: out std_logic_vector( 7 downto 0);
-		  x_reg0, x_reg1, x_reg2 : out std_logic_vector( 7 downto 0));
+	port(
+    clk: IN STD_LOGIC;
+    mbr_sal: IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    control: IN STD_LOGIC_VECTOR(24 DOWNTO 0);
+    alu_sal: OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    ma, me, z: OUT STD_LOGIC
+  );
 end Alu_regs;
 
 architecture Behavioral of Alu_regs is
-	component ALU
+	component Alu
 		port (s_muxa, s_muxb : in std_logic_vector(7 downto 0);
 			ctrl_alu : in std_logic_vector(3 downto 0);
 			s_alu : out std_logic_vector(7 downto 0));
@@ -60,20 +59,41 @@ architecture Behavioral of Alu_regs is
 		q : out  STD_LOGIC_VECTOR(7 downto 0) --Output
 		);
 	end component;
-	signal s_r0, s_r1, s_r2 : std_logic_vector(7 downto 0);
-	signal s_ma, s_mb : std_logic_vector(7 downto 0);
-	signal salu: std_logic_vector(7 downto 0);
+  
+  component Register4
+    Port (
+      d : in  STD_LOGIC_VECTOR(3 downto 0); --Input.
+      ld : in  STD_LOGIC;                   --Load/Enable.
+      clr : in  STD_LOGIC;                  --Async clear.
+      clk : in  STD_LOGIC;                  --Clock.
+      q : out  STD_LOGIC_VECTOR(3 downto 0) --Output
+    );
+  end component;
+  
+  component ALUToFlag
+    Port (
+      alu_sal : in  STD_LOGIC_VECTOR (7 downto 0);
+      ma : out  STD_LOGIC;
+      me : out  STD_LOGIC;
+      z : out  STD_LOGIC);
+  end component;
+  
+  SIGNAL mux_a_sal, mux_b_sal, alu_sal_gay : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  SIGNAL r0_sal, r1_sal, r2_sal : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  SIGNAL nomamez : STD_LOGIC_VECTOR(3 DOWNTO 0);
+  SIGNAL flag_reg_sal : STD_LOGIC_VECTOR(3 DOWNTO 0);
 begin
-	
-	m0: Register8 port map (salu, r0_ld, r0_clr, clk, s_r0);
-	m1: Register8 port map (salu, r1_ld, r1_clr, clk, s_r1);
-	m2: Register8 port map (salu, r2_ld, r2_clr, clk, s_r2);
-	r1: Mux4to1_8bit port map (s_r0, s_r1, s_r2, s_mbr, sel_a, s_ma); 
-	r2: Mux4to1_8bit port map (s_r0, s_r1, s_r2, s_mbr, sel_b, s_mb); 
-	s1: ALU port map (s_ma, s_mb, ctrl_alu, salu);
-	s_alu_regs <= salu;
-	x_reg0 <= s_r0;
-	x_reg1 <= s_r1;	
-	x_reg2 <= s_r2;
+  aluvergas: Alu port map(mux_a_sal, mux_b_sal, control(22 DOWNTO 19), alu_sal_gay);
+  alu_sal <= alu_sal_gay;
+  muxa: Mux4to1_8bit port map(r0_sal, r1_sal, r2_sal, mbr_sal, control(3 DOWNTO 2), mux_a_sal);
+  muxb: Mux4to1_8bit port map(r0_sal, r1_sal, r2_sal, mbr_sal, control(1 DOWNTO 0), mux_b_sal);
+  r0: Register8 port map(alu_sal_gay, control(13), '0', clk, r0_sal);
+  r1: Register8 port map(alu_sal_gay, control(12), '0', clk, r1_sal);
+  r2: Register8 port map(alu_sal_gay, control(11), '0', clk, r2_sal);
+  aluflag: ALUToFlag port map(alu_sal_gay, nomamez(2), nomamez(1), nomamez(0));
+  flagreg: Register4 port map(nomamez, control(10), '0', clk, flag_reg_sal);
+  ma <= flag_reg_sal(2);
+  me <= flag_reg_sal(1);
+  z <= flag_reg_sal(0);
 end Behavioral;
 
