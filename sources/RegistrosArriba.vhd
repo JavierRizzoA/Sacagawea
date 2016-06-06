@@ -79,6 +79,14 @@ architecture Behavioral of RegistrosArriba is
 		  sel : in std_logic_vector(1 downto 0);
 		  S : out std_logic);
 	end component;
+  
+  component SumadorIP
+    port(
+      ip_sal : in  STD_LOGIC_VECTOR (11 downto 0);
+      mux_sum_ip_sal : in  STD_LOGIC_VECTOR (11 downto 0);
+      sum_sal : out  STD_LOGIC_VECTOR (11 downto 0)
+    );
+  end component;
 
 	signal ip_mux_s : std_logic_vector(11 downto 0);
 	signal ip_s : std_logic_vector(11 downto 0);
