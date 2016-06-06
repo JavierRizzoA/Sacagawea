@@ -31,11 +31,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity RegistrosAbajo is
   port(
-		s_alu : in std_logic_vector(7 downto 0);
+		alu_sal : in std_logic_vector(7 downto 0);
 		clk : in std_logic;
-		mbr_ld, ir_ld: in std_logic;
-		mbr_sel, ir_sel: in std_logic;
-    ir_out: out  STD_LOGIC_VECTOR(7 downto 0);
+    control: in STD_LOGIC_VECTOR(24 DOWNTO 0);
+    senal_rst : in STD_LOGIC;
+    ir_sal: out  STD_LOGIC_VECTOR(7 downto 0);
+    mbr_sal: out STD_LOGIC_VECTOR(7 DOWNTO 0);
 		bus_datos : inout std_logic_vector(7 downto 0)
   );
 end RegistrosAbajo;
@@ -54,15 +55,13 @@ architecture Behavioral of RegistrosAbajo is
 		  S : out std_logic_vector(7 downto 0));
 	end component;
   
-  signal mbr_e : std_logic_Vector(7 downto 0);
-	signal ir_e : std_logic_vector(7 downto 0);
+  SIGNAL mux_mbr_sal : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  SIGNAL mux_ir_sal: STD_LOGIC_VECTOR(7 DOWNTO 0);
 begin 
+  mbr: Register8 port map(mux_mbr_sal, control(15), '0', clk, mbr_sal);
+  muxmbr: Mux2to1_8bit port map(bus_datos, alu_sal, control(4), mux_mbr_sal);
   
-  mbr : Register8 port map (mbr_e, mbr_ld, '0', clk, bus_datos); -- MBR
-	mbrmux : Mux2to1_8bit port map(s_alu,bus_datos ,mbr_sel, mbr_e); --MUX MBR
-	
-	ir : Register8 port map (ir_e, ir_ld, '0', clk, ir_out); -- IR
-	irmux: Mux2to1_8bit port map (bus_datos, "10011100", ir_sel, ir_e);
-	
+  ir: Register8 port map(mux_ir_sal, control(14), '0', clk, ir_sal);
+  irmux: Mux2to1_8bit port map(bus_datos, "10011100", senal_rst, mux_ir_sal);
 end Behavioral;
 
