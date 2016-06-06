@@ -82,8 +82,9 @@ architecture Behavioral of CPU is
   end component;
   
   SIGNAL ma, me, z : STD_LOGIC;
-  SIGNAL alu_sal, ir_sal, mbr_sal, ar_sal_gay : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  SIGNAL alu_sal, ir_sal, mbr_sal : STD_LOGIC_VECTOR(7 DOWNTO 0);
   SIGNAL control : STD_LOGIC_VECTOR(24 DOWNTO 0);
+  SIGNAL ar_sal_gay : STD_LOGIC_VECTOR(11 downto 0);
 begin
   ar_sal <= ar_sal_gay;
   registros: RegistrosMemoria port map(clk, ma, me, z, bus_datos, alu_sal, senal_rst, control, ir_sal, mbr_sal, ar_sal_gay);

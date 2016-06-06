@@ -106,7 +106,7 @@ begin
   ar: Register12 port map(mux_ar_sal, control(16), '0', clk, ar_s);
   ban: Register4 port map(ir_s(3 DOWNTO 0), control(17), '0', clk, ban_sal);
   muxar: Mux2to1_12bit port map(ip_sal,ban_sal & mbr_s_datos, control(5), mux_ar_sal);
-  ip: Register12 port map(mux_ip_sal, control(18), '0', clk, mux_ip_sal);
+  ip: Register12 port map(mux_ip_sal, control(18), '0', clk, ip_sal);
   temporal: Register12 port map(ip_sal, control(24), '0', clk, temporal_sal);
   muxip: Mux4to1_12bit port map(sumador_sal, ir_s(3 DOWNTO 0) & mbr_s_datos, temporal_sal, "000000000000", control(7 DOWNTO 6), mux_ip_sal);
   sum: SumadorIP port map(ip_sal, sum_mux_ip_sal, sumador_sal);
