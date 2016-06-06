@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "/home/tony/Sacagawea/RegistrosArriba_isim_beh.exe" -prj "/home/tony/Sacagawea/RegistrosArriba_beh.prj" "work.RegistrosArriba" 
+-intstyle "ise" -incremental -lib "secureip" -o "/home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/TBRegistrosArriba_isim_beh.exe" -prj "/home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/TBRegistrosArriba_beh.prj" "work.TBRegistrosArriba" 
