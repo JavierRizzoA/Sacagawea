@@ -87,38 +87,32 @@ architecture Behavioral of RegistrosArriba is
       sum_sal : out  STD_LOGIC_VECTOR (11 downto 0)
     );
   end component;
-
-	signal ip_mux_s : std_logic_vector(11 downto 0);
-	signal ip_s : std_logic_vector(11 downto 0);
-	signal sumador_s : std_logic_vector(11 downto 0);
-	signal temp_s : std_logic_vector(11 downto 0);
-	signal ban_s : std_logic_vector(3 downto 0);
-	signal ar_mux_s : std_logic_vector(11 downto 0);
-	signal flags_mux_s :std_logic;
-	signal flags_and_s: std_logic_vector(7 downto 0);
-	signal sum_mux_s : std_logic_vector(11 downto 0);
-	signal sum_tail : std_logic_vector(7 downto 0);
-	signal sum_head : std_logic_vector(3 downto 0);
+  
+  component MBRToOffset
+    Port ( mbr_sal : in  STD_LOGIC_VECTOR (7 downto 0);
+           mux_flags_sal : in  STD_LOGIC;
+           offset_sal : out  STD_LOGIC_VECTOR (11 downto 0));
+   end component;
+   
+   SIGNAL mux_ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL sumador_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL temporal_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL sum_mux_ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL offset_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL mux_flags_sal : STD_LOGIC;
+   SIGNAL ban_sal : STD_LOGIC_VECTOR(3 DOWNTO 0);
+   SIGNAL mux_ar_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
 begin
-	ip_reg: Register12 port map (ip_mux_s, control(18), '0', clk, ip_s); -- IP
-	ip_mux: Mux4to1_12bit port map (sumador_s, ir_s(3 downto 0) & mbr_s_datos, temp_s, "000000000000", control(7 downto 6), ip_mux_s);
-
-	temp_reg : Register12 port map (ip_s, control(24), '0', clk, temp_s); -- TEMP
-	
-	ban_reg : Register4 port map (ir_s(3 downto 0), control(17), '0', clk, ban_s); -- BAN
-	
-	ar_reg : Register12 port map (ar_mux_s, control(16), '0', clk, ar_s); -- AR
-	ar_mux: Mux2to1_12bit port map (ip_s, ban_s & mbr_s_datos, control(5), ar_mux_s);
-
-	flags_mux: Mux4to1_1bit port map (ME, Z, MA, 'X', ir_s(1 downto 0),  flags_mux_s); -- mux flags
-	
-	with flags_mux_s select
-	flags_and_s <= mbr_s_datos when '1',
-					"00000000" when '0',
-					"XXXXXXXX" when others;
-					
-	sum_mux : Mux2to1_12bit port map ("0000"&flags_and_s ,ip_s + 1, control(8), sumador_s);
-	
-	--sumador_s <= std_logic_vector(signed(ip_s) + signed(sum_head & sum_tail));
+  ar: Register12 port map(mux_ar_sal, control(16), '0', clk, ar_s);
+  ban: Register4 port map(ir_s(3 DOWNTO 0), control(17), '0', clk, ban_sal);
+  muxar: Mux2to1_12bit port map(ip_sal,ban_sal & mbr_s_datos, control(5), mux_ar_sal);
+  ip: Register12 port map(mux_ip_sal, control(18), '0', clk, mux_ip_sal);
+  temporal: Register12 port map(ip_sal, control(24), '0', clk, temporal_sal);
+  muxip: Mux4to1_12bit port map(sumador_sal, ir_s(3 DOWNTO 0) & mbr_s_datos, temporal_sal, "000000000000", control(7 DOWNTO 6), mux_ip_sal);
+  sum: SumadorIP port map(ip_sal, sum_mux_ip_sal, sumador_sal);
+  summux: Mux2to1_12bit port map(offset_sal, "000000000001", control(8), sum_mux_ip_sal);
+  offset: MBRToOffset port map(mbr_s_datos, mux_flags_sal, offset_sal);
+  muxflags: Mux4to1_1bit port map(MA, ME, Z, '0', ir_s(1 DOWNTO 0), mux_flags_sal);
 end Behavioral;
 

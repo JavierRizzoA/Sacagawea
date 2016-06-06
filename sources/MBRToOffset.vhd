@@ -35,16 +35,14 @@ entity MBRToOffset is
            offset_sal : out  STD_LOGIC_VECTOR (11 downto 0));
 end MBRToOffset;
 
-signal offset : STD_LOGIC_VECTOR (11 downto 0);
 
 architecture Behavioral of MBRToOffset is
-  WITH mbr_sal(7) SELECT
-    offset <= "0000" & mbr_sal WHEN '0',
-    offset <= "1111" & mbr_sal WHEN '1',
-    offset <= "XXXX" & mbr_sal WHEN OTHERS;
-    
-  WITH mux_flags_sal SELECT
-    offset_sal <= offset WHEN '1',
-    Offset_sal <= "000000000000" WHEN OTHERS;
+  signal offset : STD_LOGIC_VECTOR (11 downto 0);
 begin
+    
+  offset <= "0000" & mbr_sal WHEN mbr_sal(7) = '0' ELSE
+            "1111" & mbr_sal;
+    
+  offset_sal <= offset WHEN mux_flags_sal = '1' ELSE
+                "000000000000";
 end Behavioral;
