@@ -25,21 +25,23 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity ALU is
 	port (s_muxa, s_muxb : in std_logic_vector(7 downto 0);
 			ctrl_alu : in std_logic_vector(3 downto 0);
-			s_alu : out std_logic_vector(7 downto 0));
+			s_alu : out std_logic_vector(7 downto 0);
+			flags : out std_logic_vector(2 downto 0)
+			);
 		
 end ALU;
 
 architecture Behavioral of ALU is
-	signal result: unsigned(15 downto 0);
-	signal A, B : unsigned(15 downto 0);
+	signal result: signed(15 downto 0);
+	signal A, B : signed(15 downto 0);
 	begin
-	A <= unsigned("00000000" & s_muxa);
-	B <= unsigned("00000000" & s_muxb);
+	A <= signed("00000000" & s_muxa);
+	B <= signed("00000000" & s_muxb);
 	with ctrl_alu select
 		result <= B when "0000",
 					A + B when "0001",
 					A - B when "0010",
-					unsigned(s_muxa) * unsigned(s_muxb) when "0011",
+					signed(s_muxa) * signed(s_muxb) when "0011",
 					A / B when "0100",
 					A and B when "0101",
 					A or B when "0110",
@@ -50,5 +52,9 @@ architecture Behavioral of ALU is
 					A - 1 when "1011",
 					"XXXXXXXXXXXXXXXX" when others;
 		s_alu <= std_logic_vector(result(7 downto 0));
+	
+	flags <= "001" when ((result(7 downto 0)) = "00000000") else
+	"010" when (result(7) = '1') else
+	"100";
+	
 end Behavioral;
-

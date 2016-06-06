@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "/home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/TBRegistrosArriba_isim_beh.exe" -prj "/home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/TBRegistrosArriba_beh.prj" "work.TBRegistrosArriba" 
+-intstyle "ise" -incremental -lib "secureip" -o "/home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/testbench_isim_beh.exe" -prj "/home/javierrizzo/Documents/Escuela/ArquitecturaDeComputadoras/Sacagawea/testbench_beh.prj" "testbench" 
