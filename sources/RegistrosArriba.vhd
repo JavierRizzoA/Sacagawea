@@ -34,8 +34,8 @@ entity RegistrosArriba is
 	port(
 		s_alu : in std_logic_vector(7 downto 0);
 		clk : in std_logic;
+		
 		mbr_ld, ir_ld, ip_ld, temp_ld, ban_ld, ar_ld: in std_logic;
-		mbr_clr, ir_clr, ip_clr, temp_clr, ban_clr , ar_clr: in std_logic;
 		mbr_sel, ar_sel, sum_sel, ir_sel: in std_logic;
 		ip_sel2: in std_logic_vector(1 downto 0);
 		ME, Z, MA: in std_logic;
