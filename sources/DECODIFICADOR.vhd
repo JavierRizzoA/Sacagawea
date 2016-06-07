@@ -47,7 +47,7 @@ begin
 	temp <= "1000" when (dir_ar = "00") else
 			  "0100" when (dir_ar = "01") else
 			  "0010" when (dir_ar = "10") else
-			  "0001" when (dir_ar = "11");
+			  "0001";
 			  
 	enable_ROM <= temp(3);
 	enable_RAM <= temp(2);

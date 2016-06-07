@@ -37,7 +37,7 @@ entity RegistrosAbajo is
     senal_rst : in STD_LOGIC;
     ir_sal: out  STD_LOGIC_VECTOR(7 downto 0);
     mbr_sal: out STD_LOGIC_VECTOR(7 DOWNTO 0);
-		bus_datos : inout std_logic_vector(7 downto 0)
+		bus_datos_out : in std_logic_vector(7 downto 0)
   );
 end RegistrosAbajo;
 
@@ -45,7 +45,7 @@ architecture Behavioral of RegistrosAbajo is
 	component Register8
 		 port (
 			 d : in  STD_LOGIC_VECTOR(7 downto 0); --Input.
-			 ld, clr, clk : in  STD_LOGIC;                 
+			 load, clr, clk : in  STD_LOGIC;                 
 			 q : out  STD_LOGIC_VECTOR(7 downto 0));
 	end component;
   
@@ -59,9 +59,9 @@ architecture Behavioral of RegistrosAbajo is
   SIGNAL mux_ir_sal: STD_LOGIC_VECTOR(7 DOWNTO 0);
 begin 
   mbr: Register8 port map(mux_mbr_sal, control(15), '0', clk, mbr_sal);
-  muxmbr: Mux2to1_8bit port map(bus_datos, alu_sal, control(4), mux_mbr_sal);
+  muxmbr: Mux2to1_8bit port map(bus_datos_out, alu_sal, control(4), mux_mbr_sal);
   
   ir: Register8 port map(mux_ir_sal, control(14), '0', clk, ir_sal);
-  irmux: Mux2to1_8bit port map(bus_datos, "10011100", senal_rst, mux_ir_sal);
+  irmux: Mux2to1_8bit port map(bus_datos_out, "10011100", senal_rst, mux_ir_sal);
 end Behavioral;
 

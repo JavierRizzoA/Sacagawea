@@ -34,13 +34,15 @@ entity RegistrosMemoria is
            ma : in  STD_LOGIC;
            me : in  STD_LOGIC;
            z : in  STD_LOGIC;
-           bus_datos : inout  STD_LOGIC_VECTOR (7 downto 0);
+           bus_datos_out : in  STD_LOGIC_VECTOR (7 downto 0);
            alu_sal : in  STD_LOGIC_VECTOR (7 downto 0);
            senal_rst : in  STD_LOGIC;
            control : in STD_LOGIC_VECTOR(24 DOWNTO 0);
            ir_sal : out  STD_LOGIC_VECTOR (7 downto 0);
            mbr_sal : out  STD_LOGIC_VECTOR (7 downto 0);
-           ar_sal : out  STD_LOGIC_VECTOR (11 downto 0));
+           ar_sal : out  STD_LOGIC_VECTOR (11 downto 0);
+			  salida_ip : out std_logic_vector(11 downto 0)
+			  );
 end RegistrosMemoria;
 
 architecture Behavioral of RegistrosMemoria is
@@ -51,7 +53,10 @@ architecture Behavioral of RegistrosMemoria is
       control: in std_logic_vector(24 downto 0);
       mbr_s_datos: in std_logic_vector(7 downto 0);
       ir_s: in std_logic_vector(7 downto 0);
-      ar_s : out std_logic_vector(11 downto 0));
+      ar_s : out std_logic_vector(11 downto 0);
+		senal_reset : in std_logic;
+		salida_ip : out std_logic_vector(11 downto 0)
+		);
   end component;
   
   component RegistrosAbajo
@@ -62,7 +67,7 @@ architecture Behavioral of RegistrosMemoria is
       senal_rst : in STD_LOGIC;
       ir_sal: out  STD_LOGIC_VECTOR(7 downto 0);
       mbr_sal: out STD_LOGIC_VECTOR(7 DOWNTO 0);
-      bus_datos : inout std_logic_vector(7 downto 0)
+      bus_datos_out : in std_logic_vector(7 downto 0)
     );
   end component;
   SIGNAL ir_sal_gay, mbr_sal_gay : STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -70,7 +75,7 @@ architecture Behavioral of RegistrosMemoria is
 begin
   ir_sal <= ir_sal_gay;
   mbr_sal <= mbr_sal_gay;
-  arriba: RegistrosArriba port map(clk, me, z, ma, control, mbr_sal_gay, ir_sal_gay, ar_sal);
-  abajo: RegistrosAbajo port map(alu_sal, clk, control, senal_rst, ir_sal_gay, mbr_sal_gay, bus_datos);
+  arriba: RegistrosArriba port map(clk, me, z, ma, control, mbr_sal_gay, ir_sal_gay, ar_sal, senal_rst, salida_ip);
+  abajo: RegistrosAbajo port map(alu_sal, clk, control, senal_rst, ir_sal_gay, mbr_sal_gay, bus_datos_out);
 end Behavioral;
 

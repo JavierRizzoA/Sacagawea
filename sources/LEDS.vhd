@@ -48,7 +48,7 @@ begin
 				leds_output <= leds_input;
 			else
 				--temp <= leds_input;
-				leds_output <= "00000000";
+				leds_output <= "ZZZZZZZZ";
 			end if;
 		end if;
 	end process;

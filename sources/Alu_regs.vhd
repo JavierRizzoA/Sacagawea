@@ -53,7 +53,7 @@ architecture Behavioral of Alu_regs is
 	component Register8
 	  Port (
 		d : in  STD_LOGIC_VECTOR(7 downto 0); --Input.
-		ld : in  STD_LOGIC;                   --Load/Enable.
+		load : in  STD_LOGIC;                   --Load/Enable.
 		clr : in  STD_LOGIC;                  --Async clear.
 		clk : in  STD_LOGIC;                  --Clock.
 		q : out  STD_LOGIC_VECTOR(7 downto 0) --Output
@@ -63,7 +63,7 @@ architecture Behavioral of Alu_regs is
   component Register4
     Port (
       d : in  STD_LOGIC_VECTOR(3 downto 0); --Input.
-      ld : in  STD_LOGIC;                   --Load/Enable.
+      load : in  STD_LOGIC;                   --Load/Enable.
       clr : in  STD_LOGIC;                  --Async clear.
       clk : in  STD_LOGIC;                  --Clock.
       q : out  STD_LOGIC_VECTOR(3 downto 0) --Output
@@ -83,6 +83,7 @@ architecture Behavioral of Alu_regs is
   SIGNAL nomamez : STD_LOGIC_VECTOR(3 DOWNTO 0);
   SIGNAL flag_reg_sal : STD_LOGIC_VECTOR(3 DOWNTO 0);
 begin
+  nomamez(3) <= '0'; 
   aluvergas: Alu port map(mux_a_sal, mux_b_sal, control(22 DOWNTO 19), alu_sal_gay);
   alu_sal <= alu_sal_gay;
   muxa: Mux4to1_8bit port map(r0_sal, r1_sal, r2_sal, mbr_sal, control(3 DOWNTO 2), mux_a_sal);

@@ -34,7 +34,8 @@ entity Dispositivos is
 			ar : in std_logic_vector(11 downto 0);
 			clk : in std_logic;
 			ram_w_r: in std_logic;
-			bus_datos : inout std_logic_vector(7 downto 0);
+			bus_datos_out : out std_logic_vector(7 downto 0);
+			bus_datos_in : in std_logic_vector(7 downto 0);
 			sal_leds_spartan : out std_logic_vector(7 downto 0);
 			in_switches_spartan : in std_logic_vector(7 downto 0)
 		);
@@ -49,7 +50,8 @@ architecture Behavioral of Dispositivos is
 				 write_read : in std_logic;
 				 ram_enable : in std_logic;
 				 direccion : in std_logic_vector(9 downto 0);
-				 ram_datos : inout std_logic_vector(7 downto 0)
+				 ram_datos_escritura : out std_logic_vector(7 downto 0);
+				 ram_datos_lectura : in std_logic_vector(7 downto 0)
 			 );
 	end component;
 	
@@ -93,12 +95,12 @@ architecture Behavioral of Dispositivos is
 	signal temp0, temp1, temp2, temp3 : std_logic;
 	
 begin
-	
+
 	decodificador0: DECODIFICADOR port map(ar(11 downto 10), temp0, temp1, temp2, temp3);
-	disp0: ROM port map(clk, temp0, ar(9 downto 0), bus_datos);
-	disp1: RAM port map(clk, ram_w_r, temp1, ar(9 downto 0), bus_datos);
-	disp2: LEDS port map(clk, temp2, bus_datos, sal_leds_spartan);
-	disp3: SWITCHES port map(clk, temp3, bus_datos, in_switches_spartan);
+	disp0: ROM port map(clk, temp0, ar(9 downto 0), bus_datos_out);
+	disp1: RAM port map(clk, ram_w_r, temp1, ar(9 downto 0), bus_datos_out, bus_datos_in);
+	disp2: LEDS port map(clk, temp2, bus_datos_in, sal_leds_spartan);
+	disp3: SWITCHES port map(clk, temp3, bus_datos_out, in_switches_spartan);
 						
 end Behavioral;
 

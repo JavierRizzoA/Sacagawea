@@ -34,8 +34,12 @@ entity CPU is
       clk : in  STD_LOGIC;
       senal_rst : in  STD_LOGIC;
       ar_sal : out  STD_LOGIC_VECTOR (11 downto 0);
-      bus_datos: inout STD_LOGIC_VECTOR (7 DOWNTO 0);
-      read_write: out STD_LOGIC
+      bus_datos_out: in STD_LOGIC_VECTOR (7 DOWNTO 0);
+		bus_datos_in : out STD_LOGIC_VECTOR(7 downto 0);
+      read_write: out STD_LOGIC;
+		cont : out std_logic_vector(24 downto 0);
+		salida_ip : out std_logic_vector(11 downto 0);
+		salida_ir : out std_logic_vector(7 downto 0)
     );
 end CPU;
 
@@ -64,13 +68,14 @@ architecture Behavioral of CPU is
            ma : in  STD_LOGIC;
            me : in  STD_LOGIC;
            z : in  STD_LOGIC;
-           bus_datos : inout  STD_LOGIC_VECTOR (7 downto 0);
+           bus_datos_out : in  STD_LOGIC_VECTOR (7 downto 0);
            alu_sal : in  STD_LOGIC_VECTOR (7 downto 0);
            senal_rst : in  STD_LOGIC;
            control : in STD_LOGIC_VECTOR(24 DOWNTO 0);
            ir_sal : out  STD_LOGIC_VECTOR (7 downto 0);
            mbr_sal : out  STD_LOGIC_VECTOR (7 downto 0);
-           ar_sal : out  STD_LOGIC_VECTOR (11 downto 0)
+           ar_sal : out  STD_LOGIC_VECTOR (11 downto 0);
+			  salida_ip: out std_logic_vector(11 downto 0)
            );
   end component;
   
@@ -87,10 +92,12 @@ architecture Behavioral of CPU is
   SIGNAL ar_sal_gay : STD_LOGIC_VECTOR(11 downto 0);
 begin
   ar_sal <= ar_sal_gay;
-  registros: RegistrosMemoria port map(clk, ma, me, z, bus_datos, alu_sal, senal_rst, control, ir_sal, mbr_sal, ar_sal_gay);
+  registros: RegistrosMemoria port map(clk, ma, me, z, bus_datos_out, alu_sal, senal_rst, control, ir_sal, mbr_sal, ar_sal_gay, salida_ip);
   alu: Alu_regs port map(clk, mbr_sal, control, alu_sal, ma, me, z);
   uc: Unidad_de_control port map(ir_sal, clk, control);
-  b: Buffer3_8bit port map(mbr_sal, control(9), bus_datos);
+  b: Buffer3_8bit port map(mbr_sal, control(9), bus_datos_in);
   read_write <= control(9);
+  cont <= control;
+  salida_ir <= ir_sal;
 end Behavioral;
 

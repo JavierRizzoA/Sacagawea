@@ -37,21 +37,24 @@ entity RegistrosArriba is
 		control: in std_logic_vector(24 downto 0);
 		mbr_s_datos: in std_logic_vector(7 downto 0);
 		ir_s: in std_logic_vector(7 downto 0);
-		ar_s : out std_logic_vector(11 downto 0));
+		ar_s : out std_logic_vector(11 downto 0);
+		senal_reset : in std_logic;
+		salida_ip : out std_logic_vector(11 downto 0)
+		);
 end RegistrosArriba;
 
 architecture Behavioral of RegistrosArriba is
 	component Register12
 		port (
 			 d : in  STD_LOGIC_VECTOR(11 downto 0); --Input.
-			 ld, clr, clk : in  STD_LOGIC;                 
+			 load, clr, clk : in  STD_LOGIC;                 
 			 q : out  STD_LOGIC_VECTOR(11 downto 0));
 	end component;
 	 
 	 component Register4
 	  port (
 			 d : in  STD_LOGIC_VECTOR(3 downto 0); --Input.
-			 ld, clr, clk : in  STD_LOGIC;                 
+			 load, clr, clk : in  STD_LOGIC;                 
 			 q : out  STD_LOGIC_VECTOR(3 downto 0));
 	 end component;
 	 
@@ -67,7 +70,7 @@ architecture Behavioral of RegistrosArriba is
 			S : out std_logic_vector(11 downto 0));
 	end component;
 	
-	component Mux2to1_8bit
+	component mux2to1_8bit
 	port (A, B : in std_logic_vector(7 downto 0);
 			sel: in std_logic;
 			S : out std_logic_vector(7 downto 0));
@@ -93,8 +96,8 @@ architecture Behavioral of RegistrosArriba is
            offset_sal : out  STD_LOGIC_VECTOR (11 downto 0));
    end component;
    
-   SIGNAL mux_ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
-   SIGNAL ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
+   SIGNAL mux_ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0) := X"000";
+   SIGNAL ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0) := X"000";
    SIGNAL sumador_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
    SIGNAL temporal_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
    SIGNAL sum_mux_ip_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
@@ -104,8 +107,8 @@ architecture Behavioral of RegistrosArriba is
    SIGNAL mux_ar_sal : STD_LOGIC_VECTOR(11 DOWNTO 0);
 begin
   ar: Register12 port map(mux_ar_sal, control(16), '0', clk, ar_s);
-  ban: Register4 port map(ir_s(3 DOWNTO 0), control(17), '0', clk, ban_sal);
-  muxar: Mux2to1_12bit port map(ip_sal,ban_sal & mbr_s_datos, control(5), mux_ar_sal);
+  ban: Register4 port map(ir_s(3 DOWNTO 0), control(17), senal_reset, clk, ban_sal);
+  muxar: mux2to1_12bit port map(ip_sal,ban_sal & mbr_s_datos, control(5), mux_ar_sal);
   ip: Register12 port map(mux_ip_sal, control(18), '0', clk, ip_sal);
   temporal: Register12 port map(ip_sal, control(24), '0', clk, temporal_sal);
   muxip: Mux4to1_12bit port map(sumador_sal, ir_s(3 DOWNTO 0) & mbr_s_datos, temporal_sal, "000000000000", control(7 DOWNTO 6), mux_ip_sal);
@@ -113,5 +116,6 @@ begin
   summux: Mux2to1_12bit port map(offset_sal, "000000000001", control(8), sum_mux_ip_sal);
   offset: MBRToOffset port map(mbr_s_datos, mux_flags_sal, offset_sal);
   muxflags: Mux4to1_1bit port map(MA, ME, Z, '0', ir_s(1 DOWNTO 0), mux_flags_sal);
+  salida_ip <= ip_sal;
 end Behavioral;
 

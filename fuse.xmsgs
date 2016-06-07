@@ -5,7 +5,10 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="Simulator" num="752" delta="unknown" >Running 32 bit ISIM on 64 bit Linux
+<msg type="warning" file="HDLCompiler" num="946" delta="unknown" >"C:/Users/AlvaroMoreno/Desktop/PROCESADOR2016/Sacagawea-master/sources/RegistrosArriba.vhd" Line 111: Actual for formal port <arg fmt="%s" index="1">b</arg> is neither a static name nor a globally static expression
+</msg>
+
+<msg type="warning" file="HDLCompiler" num="946" delta="unknown" >"C:/Users/AlvaroMoreno/Desktop/PROCESADOR2016/Sacagawea-master/sources/RegistrosArriba.vhd" Line 114: Actual for formal port <arg fmt="%s" index="1">b</arg> is neither a static name nor a globally static expression
 </msg>
 
 </messages>

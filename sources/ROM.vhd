@@ -10,9 +10,9 @@ port (clk : in std_logic;
 end ROM;
 
 architecture syn of ROM is
-    type rom_type is array (1023 downto 0) of std_logic_vector (7 downto 0);                 
-    signal ROM : rom_type:= (X"00", X"00", X"00", X"00", X"00", X"00", X"00", X"00",
-                             X"00", X"00", X"00", X"00", X"00", X"00", X"00", X"00",
+    type rom_type is array (0 to 1023) of std_logic_vector (7 downto 0);                 
+    signal ROM : rom_type:= (X"20", X"2C", X"13", X"00", X"20", X"24", X"1C", X"05",
+                             X"B0", X"00", X"00", X"00", X"00", X"00", X"00", X"00",
                              X"00", X"00", X"00", X"00", X"00", X"00", X"00", X"00",
                              X"00", X"00", X"00", X"00", X"00", X"00", X"00", X"00",
                              X"00", X"00", X"00", X"00", X"00", X"00", X"00", X"00",

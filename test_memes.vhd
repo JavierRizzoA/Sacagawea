@@ -2,15 +2,15 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   17:28:44 06/05/2016
+-- Create Date:   17:08:42 06/06/2016
 -- Design Name:   
--- Module Name:   C:/Users/AlvaroMoreno/Desktop/proooc/sacagawea_copy/test_cu.vhd
+-- Module Name:   C:/Users/AlvaroMoreno/Desktop/PROCESADOR2016/Sacagawea-master/test_memes.vhd
 -- Project Name:  Sacagawea
 -- Target Device:  
 -- Tool versions:  
 -- Description:   
 -- 
--- VHDL Test Bench Created by ISE for module: Unidad_de_Control
+-- VHDL Test Bench Created by ISE for module: Dispositivos
 -- 
 -- Dependencies:
 -- 
@@ -32,37 +32,50 @@ USE ieee.std_logic_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY test_cu IS
-END test_cu;
+ENTITY test_memes IS
+END test_memes;
  
-ARCHITECTURE behavior OF test_cu IS 
+ARCHITECTURE behavior OF test_memes IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    COMPONENT Unidad_de_Control
+    COMPONENT Dispositivos
     PORT(
-         IR : IN  std_logic_vector(7 downto 0);
+         ar : IN  std_logic_vector(11 downto 0);
          clk : IN  std_logic;
-         sal_control : OUT  std_logic_vector(24 downto 0)
+         ram_w_r : IN  std_logic;
+         bus_datos : INOUT  std_logic_vector(7 downto 0);
+         sal_leds_spartan : OUT  std_logic_vector(7 downto 0);
+         in_switches_spartan : IN  std_logic_vector(7 downto 0)
         );
     END COMPONENT;
     
 
    --Inputs
-   signal IR : std_logic_vector(7 downto 0) := (others => '0');
+   signal ar : std_logic_vector(11 downto 0) := (others => '0');
    signal clk : std_logic := '0';
+   signal ram_w_r : std_logic := '0';
+   signal in_switches_spartan : std_logic_vector(7 downto 0) := (others => '0');
+
+	--BiDirs
+   signal bus_datos : std_logic_vector(7 downto 0);
 
  	--Outputs
-   signal sal_control : std_logic_vector(24 downto 0);
+   signal sal_leds_spartan : std_logic_vector(7 downto 0);
 
+ 
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: Unidad_de_Control PORT MAP (
-          IR => IR,
+   uut: Dispositivos PORT MAP (
+          ar => ar,
           clk => clk,
-          sal_control => sal_control
+          ram_w_r => ram_w_r,
+          bus_datos => bus_datos,
+          sal_leds_spartan => sal_leds_spartan,
+          in_switches_spartan => in_switches_spartan
         );
+
 
    -- Stimulus process
    stim_proc: process
@@ -71,75 +84,17 @@ BEGIN
       wait for 100 ns;	
 		
 		clk <= '0';
-		IR <= X"F1";
+		bus_datos <= X"53";
+		ram_w_r <= '1';
+		ar <= X"400";
 		
 		wait for 100 ns;
 		
 		clk <= '1';
-		IR <= X"F1";
+		bus_datos <= X"53";
 		
 		wait for 100 ns;
 		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-		
-		clk <= '1';
-		
-		wait for 100 ns;
-		
-		clk <= '0';
-		
-		wait for 100 ns;
-    
       wait;
    end process;
 
